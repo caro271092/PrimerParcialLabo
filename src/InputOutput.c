@@ -1,13 +1,5 @@
-/*InputOutput.c
- */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <limits.h>
+/*InputOutput.c */
 #include "InputOutput.h"
-#define EMPTY 1
-#define FULL 0
 
 int IngresarEntero(char mensaje[]){
 	int numeroIngresado;
@@ -17,30 +9,9 @@ int IngresarEntero(char mensaje[]){
 	return numeroIngresado;
 }
 
-/*int ValidacionIngresoDeUnFlotantePositivo(char ingreso[]){
-	int i;
-	int retorno;
-	int longitud;
-	longitud = strlen(ingreso);
-	int contadorDePuntos = 0;
-		for(i=0; i<longitud; i++){
-			if(isdigit(ingreso[i]) != 0){
-				if(ingreso[i] == '.'){
-					contadorDePuntos++;
-				}
-				if(ingreso[i] != '.' || contadorDePuntos > 1){
-					retorno = -1;
-					break;
-				}
-			}
-		retorno = 0;
-		}
-	return retorno;
-}/*/
-
 int ValidacionIngresoDeUnFlotantePositivo(char ingreso[]){
 	int i;
-	int retorno;
+	int retorno = -1;
 	int longitud;
 	longitud = strlen(ingreso);
 	int contadorDePuntos = 0;
@@ -54,12 +25,10 @@ int ValidacionIngresoDeUnFlotantePositivo(char ingreso[]){
 					break;
 				}
 		}
-		retorno = 0;
+		retorno =0;
 	}
 	return retorno;
 }
-
-
 
 int ValidacionIngresoDeUnEnteroPositivo(char ingreso[]){
 	int i;
@@ -124,19 +93,19 @@ int PedirNumeroFlotante(float* ingresoValidado, char mensaje[], char mensajeErro
 }
 
 int GetString(char string[], char message[], int len){
-	char auxiliarString[1000];
-	int retorno = 0;
-	if (string != NULL && message != NULL){
-		retorno = 1;
+	char auxiliarString[len];
+	int retorno = -1;
+	if(string != NULL && message != NULL){
 		printf(message);
 		fflush(stdin);
 		scanf("%[^\n]", auxiliarString);
-		while (strlen(auxiliarString) > len){
+		while(strlen(auxiliarString) > len){
 			printf("Reingrese: ");
 			fflush(stdin);
 			scanf("%[^\n]", auxiliarString);
 		}
 		strcpy(string, auxiliarString);
+		retorno =0;
 	}
 	return retorno;
 }

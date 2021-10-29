@@ -1,30 +1,17 @@
-/* Pedidos.c
- */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <limits.h>
+/* Pedidos.c */
 #include "Pedidos.h"
-#include "InputOutput.h"
-#define EMPTY 1
-#define FULL 0
 
-
-int IniciarEstructuraPedido(eCliente lista[], int tam){
+void IniciarEstructuraPedido(ePedido lista[], int tam){
 	for(int i=0; i<tam; i++){
-	        lista[i].pedido.isEmpty = EMPTY;
+	        lista[i].isEmpty = EMPTY;
 	    }
-	return 0;
 }
 
-
-
-int BuscarPrimerEspacioLibrePedidos(eCliente lista[], int tam){
+int BuscarPrimerEspacioLibrePedidos(ePedido lista[], int tam){
 	int i;
 	int index = -1;
 	for(i=0; i<tam;i++){
-		if(lista[i].pedido.isEmpty == EMPTY){
+		if(lista[i].isEmpty == EMPTY){
 			index = i;
 			break;
 		}
@@ -32,27 +19,30 @@ int BuscarPrimerEspacioLibrePedidos(eCliente lista[], int tam){
 	return index;
 }
 
-int AgregarPedido(eCliente lista[], int tam, int idPedido, float cantidadKilosARecolectar, float kilosHDPE, float kilosLDPE, float kilosPP, int indexClienteIngresado){
+int AgregarPedido(ePedido lista[], int tam, int idPedido, float cantidadKilosARecolectar, float kilosHDPE, float kilosLDPE, float kilosPP, int idClienteIngresado){
 	int retorno = -1;
+	int index;
+	index = BuscarPrimerEspacioLibrePedidos(lista, tam);
 	if(lista != NULL){
-	lista[indexClienteIngresado].pedido.idPedido = idPedido;
-	lista[indexClienteIngresado].pedido.cantidadKilosARecolectar = cantidadKilosARecolectar;
-	lista[indexClienteIngresado].pedido.kilosHDPE = kilosHDPE;
-	lista[indexClienteIngresado].pedido.kilosLDPE = kilosHDPE;
-	lista[indexClienteIngresado].pedido.kilosPP = kilosHDPE;
-	strcpy(lista[indexClienteIngresado].pedido.estado, "Pendiente");
-	lista[indexClienteIngresado].pedido.isEmpty = FULL;
+	lista[index].idPedido = idPedido;
+	lista[index].idCliente = idClienteIngresado;
+	lista[index].cantidadKilosARecolectar = cantidadKilosARecolectar;
+	lista[index].kilosHDPE = kilosHDPE;
+	lista[index].kilosLDPE = kilosHDPE;
+	lista[index].kilosPP = kilosHDPE;
+	strcpy(lista[index].estado, "Pendiente");
+	lista[index].isEmpty = FULL;
 	retorno = 0;
 	}
 	return retorno;
 }
 
-int IngresarDatosDePedido(eCliente lista[], int tam, int *idPedido, int indexClienteIngresado){
+int IngresarDatosDePedido(ePedido lista[], int tam, int *idPedido, int idClienteIngresado){
+	int retorno = -1;
 	float cantidadKilosARecolectar = 0;
 	float kilosHDPE;
 	float kilosLDPE;
 	float kilosPP;
-	int retorno = -1;
 	if(lista != NULL){
 	PedirNumeroFlotante(&cantidadKilosARecolectar, ">>Cantidad de kilos a recolectar: ","-->Error.", 1, 500, 2);
 	kilosHDPE= 0;
@@ -60,32 +50,33 @@ int IngresarDatosDePedido(eCliente lista[], int tam, int *idPedido, int indexCli
 	kilosPP = 0;
 	}
 	*idPedido += 1;
-	retorno = AgregarPedido(lista, tam, *idPedido, cantidadKilosARecolectar,kilosHDPE, kilosLDPE,kilosPP, indexClienteIngresado);
+	retorno = AgregarPedido(lista, tam, *idPedido, cantidadKilosARecolectar,kilosHDPE, kilosLDPE,kilosPP, idClienteIngresado);
 	return retorno;
 }
 
-
-int ImprimirListadoPedidos(eCliente lista[], int tam){
+int ImprimirListadoPedidos(ePedido lista[], int tam){
+	int retorno = -1;
 	printf("%-15s%-15s%-15s%-15s%-15s%-15s%s","ID Pedido","ID Cliente", "Kg totales", "Estado", "Kg HDPE","Kg LDPE","Kg PP\n");
 	for(int i = 0; i < tam; i++) {
-		if(lista[i].pedido.isEmpty == FULL){
-			printf("%-15d", lista[i].pedido.idPedido);
+		if(lista[i].isEmpty == FULL){
+			printf("%-15d", lista[i].idPedido);
 			printf("%-15d", lista[i].idCliente);
-			printf("%-15.1f", lista[i].pedido.cantidadKilosARecolectar);
-			printf("%-15s", lista[i].pedido.estado);
-			printf("%-15.1f", lista[i].pedido.kilosHDPE);
-			printf("%-15.1f", lista[i].pedido.kilosLDPE);
-			printf("%-15.1f\n", lista[i].pedido.kilosPP);
+			printf("%-15.1f", lista[i].cantidadKilosARecolectar);
+			printf("%-15s", lista[i].estado);
+			printf("%-15.1f", lista[i].kilosHDPE);
+			printf("%-15.1f", lista[i].kilosLDPE);
+			printf("%-15.1f\n", lista[i].kilosPP);
+			retorno =0;
 		}
 	}
-	return 0;
+	return retorno;
 }
 
-int BuscarPrimerEspacioOcupadoPedidos(eCliente lista[], int tam){
+int BuscarPrimerEspacioOcupadoPedidos(ePedido lista[], int tam){
 	int i;
 	int index = -1;
 	for(i=0; i<tam;i++){
-		if(lista[i].pedido.isEmpty == FULL){
+		if(lista[i].isEmpty == FULL){
 			index = i;
 			break;
 		}
@@ -93,11 +84,11 @@ int BuscarPrimerEspacioOcupadoPedidos(eCliente lista[], int tam){
 	return index;
 }
 
-int EncontrarPedidoPorId(eCliente lista[], int tam, int idPedidoIngresado){
+int EncontrarPedidoPorId(ePedido lista[], int tam, int idPedidoIngresado){
 	int retorno = -1;
 	int i;
 	for(i=0;i<tam;i++){
-		if(lista != NULL && lista[i].isEmpty == FULL && lista[i].pedido.idPedido == idPedidoIngresado){
+		if(lista != NULL && lista[i].isEmpty == FULL && lista[i].idPedido == idPedidoIngresado){
 			retorno = i;
 			break;
 		}
@@ -105,7 +96,7 @@ int EncontrarPedidoPorId(eCliente lista[], int tam, int idPedidoIngresado){
 	return retorno;
 }
 
-int ClasificarPlastico(eCliente lista[], int tam, int id){
+int ClasificarPlastico(ePedido lista[], int tam, int id){
 	int retorno = -1;
 	float newKilosHDPE;
 	float newKilosLDPE;
@@ -114,14 +105,27 @@ int ClasificarPlastico(eCliente lista[], int tam, int id){
 	idAModificar = EncontrarPedidoPorId(lista, tam, id);
 	if((EncontrarPedidoPorId(lista, tam, id))!=-1){
 		PedirNumeroFlotante(&newKilosHDPE, "Kilos de HDPE obtenidos: ","Error. Reingrese: ", 1, 400,2);
-		lista[idAModificar].pedido.kilosHDPE = newKilosHDPE;
+		lista[idAModificar].kilosHDPE = newKilosHDPE;
 		PedirNumeroFlotante(&newKilosLDPE, "Kilos de LDPE obtenidos: ","Error. Reingrese: ", 1, 400,2);
-		lista[idAModificar].pedido.kilosLDPE = newKilosLDPE;
+		lista[idAModificar].kilosLDPE = newKilosLDPE;
 		PedirNumeroFlotante(&newKilosPP, "Kilos de PP obtenidos: ","Error. Reingrese: ", 1, 400,2);
-		lista[idAModificar].pedido.kilosPP = newKilosPP;
-		strcpy(lista[idAModificar].pedido.estado, "Completado");
+		lista[idAModificar].kilosPP = newKilosPP;
+		strcpy(lista[idAModificar].estado, "Completado");
 		retorno = 0;
 		}
 	 return retorno;
 }
+
+float KilosTotalesDePPObtenidos(ePedido listaPedidos[], int tamPedidos){
+	int i;
+	float acumuladorPP =0;
+	for(i=0; i<tamPedidos;i++){
+		 if(listaPedidos!=NULL && (listaPedidos[i].isEmpty == FULL) && (strcmp(listaPedidos[i].estado,"Completado")==0)){
+			 acumuladorPP = acumuladorPP + listaPedidos[i].kilosPP;
+		 }
+	}
+	return acumuladorPP;
+}
+
+
 
