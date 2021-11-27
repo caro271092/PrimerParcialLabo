@@ -10,7 +10,7 @@
 #include "Informes.h"
 #include "InputOutput.h"
 #include "Localidades.h"
-#define T_CLIENTES 100
+#define T_CLIENTES 100 //<---TAM ya predefinidos
 #define T_PEDIDOS 1000
 #define T_LOCALIDADES 3
 
